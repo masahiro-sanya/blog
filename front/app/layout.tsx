@@ -9,11 +9,11 @@ import Profile from '@/components/Profile';
 
 export const metadata = {
   metadataBase: new URL(process.env.BASE_URL || 'http://localhost:3000'),
-  title: 'S1MLOG Blog',
-  description: 'A s1mlog blog presented by microCMS',
+  title: 'Blog',
+  description: 'A blog blog presented by microCMS',
   openGraph: {
-    title: 's1mlog Blog',
-    description: 'A s1mlog blog presented by microCMS',
+    title: 'blog Blog',
+    description: 'A blog blog presented by microCMS',
     images: '/ogp.png',
   },
   alternates: {
@@ -26,17 +26,28 @@ type Props = {
 };
 
 export default async function RootLayout({ children }: Props) {
+  console.log('Getting tag list...');
   const tags = await getTagList({
     limit: LIMIT,
+  }).catch((error) => {
+    console.error('Error in getTagList:', error);
+    return { contents: [] };
   });
-  const writer = await getWriter();
+  console.log('Tag list response:', tags);
+
+  console.log('Getting writer...');
+  const writer = await getWriter().catch((error) => {
+    console.error('Error in getWriter:', error);
+    return null;
+  });
+  console.log('Writer response:', writer);
 
   return (
     <html lang="ja">
       <body>
         <Header />
-        <Nav tags={tags.contents} />
-        <Profile writer={writer} />
+        <Nav tags={tags?.contents || []} />
+        {writer && <Profile writer={writer} />}
         <main className={styles.main}>{children}</main>
         <Footer />
       </body>

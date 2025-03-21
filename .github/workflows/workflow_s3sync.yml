@@ -6,11 +6,11 @@ on:
       - main
 
 env:
-  MY_AWS_REGION: "ap-northeast-1"
-  AWS_ROLENAME: "s1mlog-prd-github-role"
-  AWS_S3_BUCKET: "s1mlog-prd-static-web-hosting-bucket"
-  SOURCE_DIR: ".next"
-  DEST_DIR: "./"
+  MY_AWS_REGION: 'ap-northeast-1'
+  AWS_ROLENAME: 'blog-prd-github-role'
+  AWS_S3_BUCKET: 'blog-prd-static-web-hosting-bucket'
+  SOURCE_DIR: '.next'
+  DEST_DIR: './'
 
 jobs:
   deploy:
