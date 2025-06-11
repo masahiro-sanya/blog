@@ -4,13 +4,14 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'front/**'
 
 env:
   MY_AWS_REGION: 'ap-northeast-1'
   AWS_ROLENAME: 'blog-prd-github-role'
   AWS_S3_BUCKET: 'blog-prd-static-web-hosting-bucket'
-  SOURCE_DIR: '.next'
-  DEST_DIR: './'
+  NODE_VERSION: '20'
 
 jobs:
   deploy:
@@ -18,32 +19,55 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    defaults:
+      run:
+        working-directory: front
+
     steps:
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: front/package-lock.json
+
       - name: Configure AWS credentials with IAM Role
-        uses: aws-actions/configure-aws-credentials@main
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::${{secrets.AWS_ACCOUNT_ID}}:role/${{env.AWS_ROLENAME}}
           aws-region: ${{env.MY_AWS_REGION}}
-      - name: make .env
+
+      - name: Create .env file
         run: |
-          cd front
-          touch .env
-          echo "MICROCMS_API_KEY=${{ secrets.MICROCMS_API_KEY }}" >> .env
-          echo "MICROCMS_SERVICE_DOMAIN=${{ secrets.MICROCMS_SERVICE_DOMAIN }}" >> .env
-          echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
-          cat .env
-      - name: build
+          cat << EOF > .env
+          MICROCMS_API_KEY=${{ secrets.MICROCMS_API_KEY }}
+          MICROCMS_SERVICE_DOMAIN=${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          BASE_URL=${{ secrets.BASE_URL }}
+          EOF
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Deploy to S3
         run: |
-          pwd
-          ls -la
-          cd front
-          npm install
-          npm run build
-      - name: Copy files to S3
+          aws s3 sync .next s3://${{env.AWS_S3_BUCKET}}/ \
+            --delete \
+            --cache-control "max-age=31536000,public" \
+            --exclude "*.html" \
+            --exclude "*/data/*" \
+            --exclude "*/traces/*"
+
+      - name: Deploy HTML and data files to S3
         run: |
-          cd front
-          pwd
-          ls -la
-          aws s3 sync ${{env.SOURCE_DIR}} s3://${{env.AWS_S3_BUCKET}}/ --exclude '.*git*'
+          aws s3 sync .next s3://${{env.AWS_S3_BUCKET}}/ \
+            --delete \
+            --cache-control "no-cache,no-store,must-revalidate" \
+            --include "*.html" \
+            --include "*/data/*" \
+            --include "*/traces/*"
