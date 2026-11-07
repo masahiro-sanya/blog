@@ -1,18 +1,23 @@
+import { notFound } from 'next/navigation';
 import { getList } from '@/libs/microcms';
 import { LIMIT } from '@/constants';
 import Pagination from '@/components/Pagination';
 import ArticleList from '@/components/ArticleList';
 
 type Props = {
-  params: {
+  params: Promise<{
     current: string;
-  };
+  }>;
 };
 
 export const revalidate = 60;
 
 export default async function Page({ params }: Props) {
-  const current = parseInt(params.current as string, 10);
+  const { current: currentParam } = await params;
+  const current = parseInt(currentParam, 10);
+  if (!Number.isInteger(current) || current < 1) {
+    notFound();
+  }
   const data = await getList({
     limit: LIMIT,
     offset: LIMIT * (current - 1),

@@ -4,6 +4,7 @@ import type {
   MicroCMSImage,
   MicroCMSDate,
   MicroCMSContentId,
+  MicroCMSListResponse,
 } from 'microcms-js-sdk';
 import { notFound } from 'next/navigation';
 
@@ -48,7 +49,7 @@ export const client = createClient({
 });
 
 // ブログ一覧を取得
-export const getList = async (queries?: MicroCMSQueries) => {
+export const getList = async (queries?: MicroCMSQueries): Promise<MicroCMSListResponse<Blog>> => {
   try {
     const listData = await client.getList<Blog>({
       endpoint: 'blog',
@@ -57,7 +58,7 @@ export const getList = async (queries?: MicroCMSQueries) => {
     return listData;
   } catch (error) {
     console.error('Error fetching blog list:', error);
-    return { contents: [] };
+    return { contents: [], totalCount: 0, offset: 0, limit: 0 };
   }
 };
 
