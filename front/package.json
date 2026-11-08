@@ -18,7 +18,7 @@
     "printWidth": 100
   },
   "engines": {
-    "node": ">=18.x"
+    "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
   },
   "dependencies": {
     "@types/cheerio": "^0.22.35",
@@ -29,15 +29,20 @@
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "encoding": "^0.1.13",
-    "eslint": "9.16.0",
-    "eslint-config-next": "15.0.3",
+    "eslint": "9.39.5",
+    "eslint-config-next": "^15.5.29",
     "eslint-config-prettier": "^9.1.0",
     "highlight.js": "^11.10.0",
     "microcms-js-sdk": "^3.1.2",
-    "next": "^15.1.0",
+    "next": "^15.5.29",
     "prettier": "^3.4.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "typescript": "5.7.2"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "^8.5.23"
+    }
   }
 }
