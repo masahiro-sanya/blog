@@ -18,27 +18,26 @@
     "printWidth": 100
   },
   "engines": {
-    "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
+    "node": ">=20.18.1"
   },
   "dependencies": {
-    "@types/cheerio": "^0.22.35",
-    "@types/node": "22.10.1",
-    "@types/react": "18.3.12",
-    "@types/react-dom": "18.3.1",
-    "cheerio": "^1.0.0",
-    "date-fns": "^4.1.0",
+    "@types/node": "22.20.5",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
+    "cheerio": "^1.2.0",
+    "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
-    "encoding": "^0.1.13",
+    "encoding": "^0.1.14",
     "eslint": "9.39.5",
     "eslint-config-next": "^15.5.29",
-    "eslint-config-prettier": "^9.1.0",
-    "highlight.js": "^11.10.0",
-    "microcms-js-sdk": "^3.1.2",
+    "eslint-config-prettier": "^10.1.8",
+    "highlight.js": "^11.12.0",
+    "microcms-js-sdk": "^3.6.0",
     "next": "^15.5.29",
-    "prettier": "^3.4.1",
+    "prettier": "^3.10.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "typescript": "5.7.2"
+    "typescript": "5.9.3"
   },
   "overrides": {
     "next": {
