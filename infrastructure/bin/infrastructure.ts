@@ -19,7 +19,13 @@ const phaseOfKey: keyof NodeJS.ProcessEnv = app.node.tryGetContext('attrphase');
 
 try {
   // .envファイルの読み込み
-  const envFile = dotenv.config();
+  // dotenv 17 以降は DOTENV_* 環境変数が既定値になり、読み込みログも出るため、従来の挙動に固定する
+  const envFile = dotenv.config({
+    path: '.env',
+    encoding: 'utf8',
+    override: false,
+    quiet: true,
+  });
   if (envFile.error) {
     throw envFile.error;
   }

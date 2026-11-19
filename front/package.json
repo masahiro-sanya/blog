@@ -18,7 +18,7 @@
     "printWidth": 100
   },
   "engines": {
-    "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
+    "node": ">=20.18.1"
   },
   "dependencies": {
     "@types/node": "22.20.5",
